@@ -1,0 +1,59 @@
+<project name="hw11af" default="test.junit.launcher" basedir=".">
+
+
+
+	
+   <property environment="env"/>
+ <path id="test.classpath">
+        <pathelement location ="test/bin"/>
+        <pathelement location="main/bin"/>
+<pathelement path = "${env.JUNIT}" />
+    </path>
+
+    <target name="build" description="clean build" depends="clean" />
+
+    <target name="clean">
+        <delete dir="build"/>
+    	 <delete dir="test/bin"/>
+    	 <delete dir="main/bin"/>
+   	 <delete dir="test"/>
+
+    </target>
+
+    <target name="init">
+        <mkdir dir="main/bin"/>
+        <mkdir dir="test/bin"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac destdir="main/bin" srcdir="src" includeantruntime="true"/>
+        <javac destdir="test/bin" classpathref="test.classpath" srcdir="test" includeantruntime="true"/>
+    </target>
+
+    <!-- https://junit.org/junit5/docs/snapshot/user-guide/#running-tests-build-ant -->
+    <target name="test.junit.launcher" depends="compile">
+        <junitlauncher printSummary="true" haltOnFailure="true" >
+            <classpath refid="test.classpath"/>
+            <testclasses outputdir="test">
+                <fileset dir="test/bin">
+                <include name="**/*Test.class"/>
+                </fileset>
+                <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+                <listener type="legacy-plain" sendSysOut="true" />
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+	<target name="jrun" depends="compile">
+	 <java classname="edu.umb.cs.cs680.hw11">
+	<classpath path="main/bin"></classpath>
+	</java>
+
+
+	</target>
+
+	
+	
+	
+
+</project>
